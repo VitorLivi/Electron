@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="index.css" />
+
+    <title>Hello World!</title>
+  </head>
+  <body>
+    <div>
+      <div class="page-header">
+      </div>
+      <div>
+      <div class="filter">
+      <div>
+        <select class="form-select" aria-label="Tipo">
+          <option selected disabled>Tipo</option>
+          <option value="1">Apartamento</option>
+          <option value="2">Casa</option>
+        </select>
+      </div>
+      <div class="d-flex flex-row gap-1">
+        <input class="form-control" type="search" placeholder="Procurar" aria-label="Procurar">
+        <button id="save" class="btn btn-outline-warning">
+          Procurar
+        </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Novo
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Nova Propriedade</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Nome</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="nome" id="name">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="city" class="col-sm-2 col-form-label">Cidade</label>
+                <div class="col-sm-10">
+                  <input type="text" class="form-control" placeholder="Cidade" id="city">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="inputPassword3" class="col-sm-2 col-form-label">Descrição</label>
+                <div class="col-sm-10">
+                  <textarea class="form-control" placeholder="Descrição da propriedade" id="description" style="height: 100px"></textarea>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Imagem</label>
+                <div class="col-sm-10">
+                  <input type="file" class="form-control" id="add-file">
+                  <div id="image-preview"></div>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <legend class="col-form-label col-sm-2 pt-0">Tipo</legend>
+                <div class="col-sm-10">
+                  <select id="type" class="form-select" aria-label="Tipo">
+                    <option selected disabled>Tipo</option>
+                    <option value="1">Casa geminada</option>
+                    <option value="2">Casa alvenaria</option>
+                    <option value="3">Sítio</option>
+                    <option value="4">Casa de madeira</option>
+                    <option value="5">Casa de praia</option>
+                    <option value="6">Casa de campo</option>
+                    <option value="7">Duplex</option>
+                    <option value="8">Terreno</option>
+                    <option value="9">Residencial</option>
+                    <option value="10">Condominio</option>
+                    <option value="11">Apartamento</option>
+                    <option value="12">Comercial</option>
+                    <option value="13">Escritório</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <legend class="col-form-label col-sm-2 pt-0">Status</legend>
+                <div class="col-sm-10">
+                  <select id="status" class="form-select" aria-label="Status">
+                    <option selected disabled>Status</option>
+                    <option value="1">Á venda</option>
+                    <option value="2">Á alugar</option>
+                  </select>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Interno</label>
+                <div class="col-sm-10 d-flex flex-row gap-3">
+                  <input id="rooms" type="number" placeholder="Quartos" class="form-control">
+                  <input id="bathrooms" type="number" placeholder="Banheiros" class="form-control">
+                  <input id="mt" type="number" placeholder="mt²" class="form-control">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Valor</label>
+                <div class="col-sm-10">
+                  <input id="value" type="text" placeholder="R$" class="form-control">
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            <button id="add-residence" type="button" class="btn btn-primary" data-bs-dismiss="modal">Adicionar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="images" class="my-grid container"></div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="helpers.js"></script>
+  </body>
+</html>
