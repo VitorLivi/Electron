@@ -1,6 +1,6 @@
-const fs = require('fs');
+const fs = require('fs')
 const path = require('path')
-import { v4 as uuidv4 } from 'uuid';
+const uuid = require('uuid')
 
 const addFile = document.getElementById("add-file")
 const addResidenceButton = document.getElementById("add-residence")
@@ -34,17 +34,48 @@ function render() {
   }
 }
 
-function renderWrapper(residenceName) {
-  const pathName = path.join('./src/data', residenceName);
+function onClickResidence(e) {
+  const residenceId = e.currentTarget.id
+  const params = new URLSearchParams();
+
+  params.append("id", residenceId);
+
+  window.location.href = `./property.html?${params.toString()}`
+}
+
+function renderWrapper(residenceId) {
+  const pathName = path.join('./src/data', residenceId);
   const images = fs.readdirSync(`${pathName}/images`);
 
   const imageDiv = document.getElementById('images')
   const residenceWrapper = document.createElement('div')
 
-  residenceWrapper.className = 'residence-wrapper'
+  const dataPath = `./src/data/${residenceId}/${residenceId}.json` 
+  const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
-  renderImage(`data/${residenceName}/images/${images[0]}`, residenceWrapper)
-  renderData(`./src/data/${residenceName}/${residenceName}.json`, residenceWrapper)
+  residenceWrapper.className = 'residence-wrapper'
+  residenceWrapper.id = data.id
+  residenceWrapper.onclick = onClickResidence
+
+  const removeButton = document.createElement('div')
+  const removeButtonIcon = document.createElement('span')
+  const editButton = document.createElement('div')
+  const editButtonIcon = document.createElement('span')
+
+  removeButton.className = 'remove-button'
+  removeButtonIcon.textContent = 'x'
+
+  editButton.className = 'edit-button'
+  editButtonIcon.textContent = '✎'
+
+  removeButton.appendChild(removeButtonIcon)
+  editButton.appendChild(editButtonIcon)
+
+  residenceWrapper.appendChild(removeButton)
+  residenceWrapper.appendChild(editButton)
+
+  renderImage(`data/${residenceId}/images/${images[0]}`, residenceWrapper)
+  renderData(data, residenceWrapper)
 
   imageDiv.appendChild(residenceWrapper)
 }
@@ -57,10 +88,10 @@ function renderImage(imagePath, residenceWrapper) {
   residenceWrapper.appendChild(newImage)
 }
 
-function renderData(dataPath, residenceWrapper) {
-  const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
-
+function renderData(data, residenceWrapper) {
   const residenceData = document.createElement('div')
+
+  residenceData.id = 'residence-specs'
 
   const span1 = document.createElement('span')
   const span2 = document.createElement('span')
@@ -84,11 +115,11 @@ function renderData(dataPath, residenceWrapper) {
   residenceWrapper.appendChild(residenceNameEl)
 }
 
-function saveFiles(name) {
+function saveFiles(id) {
   for (var i = 0; i < files.length; i++) {
     const file = files[i]
     const fileName = file.name
-    const filePath = `./src/data/${name}/images/${fileName}` 
+    const filePath = `./src/data/${id}/images/${fileName}` 
   
     const reader = new FileReader()
   
@@ -115,14 +146,13 @@ function residenceExists(name) {
   return false
 }
 
-function createDirectory(uuid) {
-  const dir = `./src/data/${uuid}/images`;
+function createDirectory(id) {
+  const dir = `./src/data/${id}/images`;
   
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function saveData(name) {
-  const uuid = uuidv4()
+function saveData(id) {
   const nameEl = document.getElementById('name')
   const city = document.getElementById('city')
   const description = document.getElementById('description')
@@ -133,10 +163,10 @@ function saveData(name) {
   const mt = document.getElementById('mt')
   const value = document.getElementById('value')
 
-  createDirectory(uuid)
+  createDirectory(id)
 
   const data = {
-    uuid: uuid,
+    id: id,
     name: nameEl.value,
     city: city.value,
     description: description.value,
@@ -148,10 +178,11 @@ function saveData(name) {
     value: value.value
   }
 
-  fs.writeFileSync(`./src/data/${uuid}/${uuid}.json`, JSON.stringify(data));
+  fs.writeFileSync(`./src/data/${id}/${id}.json`, JSON.stringify(data));
 }
 
 function onAddResidence() {
+  const id = uuid.v4()
   const name = document.getElementById('name')
   const alreadyExists = residenceExists(name.value)
 
@@ -159,8 +190,8 @@ function onAddResidence() {
     return
   }
 
-  saveData(name.value)
-  saveFiles(name.value)
+  saveData(id)
+  saveFiles(id)
 }
 
 addFile.onchange = onSelectFile

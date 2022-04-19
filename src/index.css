@@ -51,6 +51,7 @@ html body {
 
 .residence-wrapper {
   display: flex;
+  position: relative;
   gap: 10px;
   cursor: pointer;
   transition: 0.3s;
@@ -62,7 +63,7 @@ html body {
   height: 230px;
 }
 
-.residence-wrapper div {
+.residence-wrapper #residence-specs {
   display: flex;
   flex-direction: row;
   gap: 10px;
@@ -70,4 +71,54 @@ html body {
 
 .residence-wrapper div span{
   font-size: 12px;
+}
+
+.residence-wrapper:hover .remove-button {
+  display: flex;
+}
+
+.residence-wrapper:hover .edit-button {
+  display: flex;
+}
+
+.remove-button {
+  display: none;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  right: -17.5px;
+  top: -17.5px;
+  background-color: #ff0000;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.remove-button span {
+  font-size: 18px;
+}
+
+.edit-button {
+  display: none;
+  width: 35px;
+  height: 35px;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: -17.5px;
+  top: -17.5px;
+  background-color: #0d6efd;
+  color: #fff;
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  transition: 0.3s;
+}
+
+.edit-button span {
+  font-size: 18px;
 }
