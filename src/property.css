@@ -23,6 +23,7 @@ html body {
 }
 
 #property-description {
+  margin-top: 20px;
   white-space: pre-wrap;       /* Since CSS 2.1 */
   white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
   white-space: -pre-wrap;      /* Opera 4-6 */
@@ -33,4 +34,39 @@ html body {
 #return-button {
   margin-top: 20px;
   margin-bottom: 20px;
+}
+
+#top-info span {
+  padding: 20px;
+  background-color: #F5F5F5CC;
+  flex: auto;
+}
+
+#property-price {
+  font-size: 28px;
+  font-weight: 500;
+  background-color: #0d6efd;
+  color: #FFF;
+  padding: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+#property-info {
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 10px;
+  text-align: center;
+}
+
+#property-info span {
+  padding: 10px;
+  background-color: #F5F5F5CC;
+  transition: 0.3s;
+  border-bottom: solid 2px #CCC;
+}
+
+#location {
+  margin-top: 20px;
 }

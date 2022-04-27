@@ -7,6 +7,10 @@ const addResidenceButton = document.getElementById("add-residence")
 
 let files = []
 
+function getPropertyData(propertyId) {
+  return JSON.parse(fs.readFileSync(`./src/data/${propertyId}/${propertyId}.json`, 'utf8'));
+}
+
 function onSelectFile(e) {
   const fileList = e.target.files;
 
@@ -36,11 +40,29 @@ function render() {
 
 function onClickResidence(e) {
   const residenceId = e.currentTarget.id
-  const params = new URLSearchParams();
 
-  params.append("id", residenceId);
+  if (e.srcElement.tagName === 'IMG') {
+    const params = new URLSearchParams();
+    params.append("id", residenceId);
+    window.location.href = `./property.html?${params.toString()}`  
+  }
+}
 
-  window.location.href = `./property.html?${params.toString()}`
+function onEditProperty(e) {
+  const modalElement = document.getElementById('exampleModal')
+  const addResidenceButton = document.getElementById('add-residence')
+
+  const propertyId = e.currentTarget.parentNode.id
+  
+  addResidenceButton.textContent = 'Salvar'
+  loadData(propertyId)
+
+  let myModal = new bootstrap.Modal(modalElement, {});
+  myModal.show();
+}
+
+function updateProperty () {
+
 }
 
 function renderWrapper(residenceId) {
@@ -65,6 +87,7 @@ function renderWrapper(residenceId) {
   removeButton.className = 'remove-button'
   removeButtonIcon.textContent = 'x'
 
+  editButton.onclick = onEditProperty
   editButton.className = 'edit-button'
   editButtonIcon.textContent = '✎'
 
@@ -152,19 +175,91 @@ function createDirectory(id) {
   fs.mkdirSync(dir, { recursive: true });
 }
 
-function saveData(id) {
+function getListItems() {
+  const list = document.getElementById('list')
+  const listItems = list.children
+
+  const arrayList = []
+
+  for (let i = 0; i < listItems.length; i++) {
+    const currentItem = listItems[i];
+    
+    arrayList.push(currentItem.textContent)
+  }
+
+  return arrayList
+}
+
+function loadImages(propertyId) {
+  const pathName = path.join('./src/data', propertyId);
+  const images = fs.readdirSync(`${pathName}/images`);
+
+  const imagePreview = document.getElementById("image-preview")
+
+  imagePreview.innerHTML = ''
+
+  for (let i = 0; i < images.length; i++) {
+    const currentImage = images[i];
+
+    const newImage = document.createElement("img")
+
+    newImage.className = "image-preview"
+    newImage.src = `./data/${propertyId}/images/${currentImage}`
+    newImage.id = `preview-${i}`
+  
+    imagePreview.appendChild(newImage)
+  }
+}
+
+function loadList(list = []) {
+  
+}
+
+function loadData(propertyId) {
+  const propertyData = getPropertyData(propertyId)
+
   const nameEl = document.getElementById('name')
   const city = document.getElementById('city')
   const description = document.getElementById('description')
   const type = document.getElementById('type')
   const status = document.getElementById('status')
   const rooms = document.getElementById('rooms')
+  const lat = document.getElementById('lat')
+  const long = document.getElementById('long')
   const bathrooms = document.getElementById('bathrooms')
   const mt = document.getElementById('mt')
   const value = document.getElementById('value')
 
-  createDirectory(id)
+  loadList(propertyData.list)
+  loadImages(propertyId)
 
+  nameEl.value = propertyData.name
+  city.value = propertyData.city
+  description.value = propertyData.description
+  type.value = propertyData.type
+  status.value = propertyData.status
+  rooms.value = propertyData.rooms
+  lat.value = propertyData.lat
+  long.value = propertyData.long
+  bathrooms.value = propertyData.bathrooms
+  mt.value = propertyData.mt
+  value.value = propertyData.value
+}
+
+function saveData(id, exist = false) {
+  const nameEl = document.getElementById('name')
+  const city = document.getElementById('city')
+  const description = document.getElementById('description')
+  const type = document.getElementById('type')
+  const status = document.getElementById('status')
+  const rooms = document.getElementById('rooms')
+  const lat = document.getElementById('lat')
+  const long = document.getElementById('long')
+  const bathrooms = document.getElementById('bathrooms')
+  const mt = document.getElementById('mt')
+  const value = document.getElementById('value')
+  const listItems = getListItems()
+  
   const data = {
     id: id,
     name: nameEl.value,
@@ -173,12 +268,39 @@ function saveData(id) {
     type: type.value,
     status: status.value,
     rooms: rooms.value,
+    lat: lat.value,
+    long: long.value,
     bathrooms: bathrooms.value,
     mt: mt.value,
-    value: value.value
+    value: value.value,
+    list: listItems
   }
 
-  fs.writeFileSync(`./src/data/${id}/${id}.json`, JSON.stringify(data));
+  if (!exist) {
+    createDirectory(id)
+    fs.writeFileSync(`./src/data/${id}/${id}.json`, JSON.stringify(data));
+  } else {
+
+  }
+}
+
+function addItemList() {
+  const inputList = document.getElementById('input-list')
+  const list = document.getElementById('list')
+
+  const listItem = document.createElement('li')
+
+  if (inputList.value !== '') {
+    listItem.className = 'list-group-item'
+    listItem.textContent = inputList.value
+    list.appendChild(listItem)
+  }
+}
+
+function onOpenModal() {
+  const addResidenceButton = document.getElementById('add-residence')
+
+  addResidenceButton.textContent = 'Adicionar'
 }
 
 function onAddResidence() {

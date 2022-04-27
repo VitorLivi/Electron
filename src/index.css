@@ -122,3 +122,11 @@ html body {
 .edit-button span {
   font-size: 18px;
 }
+
+.list {
+  margin-top: 20px;
+}
+
+#description {
+  height: 200px;
+}

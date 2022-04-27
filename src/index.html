@@ -7,7 +7,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" href="index.css" />
 
-    <title>Hello World!</title>
+    <title>Gerenciador de propriedades</title>
   </head>
   <body>
     <div>
@@ -27,7 +27,7 @@
         <button id="save" class="btn btn-outline-warning">
           Procurar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+        <button onclick="onOpenModal()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Novo
         </button>
       </div>
@@ -35,7 +35,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Nova Propriedade</h5>
@@ -46,7 +46,7 @@
               <div class="row mb-3">
                 <label for="name" class="col-sm-2 col-form-label">Nome</label>
                 <div class="col-sm-10">
-                  <input type="text" class="form-control" placeholder="nome" id="name">
+                  <input type="text" class="form-control" placeholder="Nome" id="name">
                 </div>
               </div>
               <div class="row mb-3">
@@ -58,7 +58,18 @@
               <div class="row mb-3">
                 <label for="inputPassword3" class="col-sm-2 col-form-label">Descrição</label>
                 <div class="col-sm-10">
-                  <textarea class="form-control" placeholder="Descrição da propriedade" id="description" style="height: 100px"></textarea>
+                  <textarea class="form-control" placeholder="Descrição da propriedade" id="description"></textarea>
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="city" class="col-sm-2 col-form-label">Lista</label>
+                <div class="col-sm-10">
+                  <div class="input-group mb-3">
+                    <input id="input-list" type="text" class="form-control" placeholder="Item">
+                    <button id="add-list" onclick="addItemList()" class="btn btn-outline-secondary" type="button">Adicionar</button>
+                  </div>
+                  <ul id="list" class="list-group list">
+                  </ul>
                 </div>
               </div>
               <div class="row mb-3">
@@ -105,6 +116,13 @@
                   <input id="rooms" type="number" placeholder="Quartos" class="form-control">
                   <input id="bathrooms" type="number" placeholder="Banheiros" class="form-control">
                   <input id="mt" type="number" placeholder="mt²" class="form-control">
+                </div>
+              </div>
+              <div class="row mb-3">
+                <label for="name" class="col-sm-2 col-form-label">Localização</label>
+                <div class="col-sm-10 d-flex flex-row gap-3">
+                  <input id="lat" type="number" placeholder="Latitude" class="form-control">
+                  <input id="long" type="number" placeholder="Longitude" class="form-control">
                 </div>
               </div>
               <div class="row mb-3">
