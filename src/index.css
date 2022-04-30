@@ -61,6 +61,7 @@ html body {
 .residence-wrapper img {
   width: 330px;
   height: 230px;
+  object-fit: cover;
 }
 
 .residence-wrapper #residence-specs {
@@ -129,4 +130,14 @@ html body {
 
 #description {
   height: 200px;
+}
+
+.list-group-item:hover {
+  cursor: pointer;
+  background-color: #ffc5c5;
+}
+
+#image-preview img:hover {
+  cursor: pointer;
+  background-color: #ffc5c5;
 }

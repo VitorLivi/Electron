@@ -23,7 +23,7 @@
         </select>
       </div>
       <div class="d-flex flex-row gap-1">
-        <input class="form-control" type="search" placeholder="Procurar" aria-label="Procurar">
+        <input id="search" class="form-control" onkeyup="onSearch()" type="search" placeholder="Procurar" aria-label="Procurar">
         <button id="save" class="btn btn-outline-warning">
           Procurar
         </button>
@@ -35,6 +35,7 @@
 
     <!-- Modal -->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <input id="current-property" style="display: none;"></input>
       <div class="modal-dialog modal-lg">
         <div class="modal-content">
           <div class="modal-header">

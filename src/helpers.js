@@ -53,16 +53,17 @@ function onEditProperty(e) {
   const addResidenceButton = document.getElementById('add-residence')
 
   const propertyId = e.currentTarget.parentNode.id
+  setCurrentPropertyId(propertyId)
   
+  addResidenceButton.onclick = function() {
+    saveData(propertyId)
+  }
   addResidenceButton.textContent = 'Salvar'
+
   loadData(propertyId)
 
   let myModal = new bootstrap.Modal(modalElement, {});
   myModal.show();
-}
-
-function updateProperty () {
-
 }
 
 function renderWrapper(residenceId) {
@@ -97,7 +98,12 @@ function renderWrapper(residenceId) {
   residenceWrapper.appendChild(removeButton)
   residenceWrapper.appendChild(editButton)
 
-  renderImage(`data/${residenceId}/images/${images[0]}`, residenceWrapper)
+  if (images.length > 0) {
+    renderImage(`data/${residenceId}/images/${images[0]}`, residenceWrapper)
+  } else {
+    renderImage('./assets/no-image.png', residenceWrapper)
+  }
+
   renderData(data, residenceWrapper)
 
   imageDiv.appendChild(residenceWrapper)
@@ -161,14 +167,6 @@ function saveFiles(id) {
   }
 }
 
-function residenceExists(name) {
-  if (fs.existsSync(`./src/data/${name}`)) {
-    return true
-  }
-
-  return false
-}
-
 function createDirectory(id) {
   const dir = `./src/data/${id}/images`;
   
@@ -190,9 +188,21 @@ function getListItems() {
   return arrayList
 }
 
+function onClickImagePreview(e) {
+  const propertyId = getCurrentPropertyId()
+  const pathName = path.join('./src/data', propertyId)
+
+  const imageName = e.target.id
+
+  const imagePreview = document.getElementById('image-preview')
+  imagePreview.removeChild(e.target)
+
+  fs.unlinkSync(`${pathName}/images/${imageName}`)
+}
+
 function loadImages(propertyId) {
-  const pathName = path.join('./src/data', propertyId);
-  const images = fs.readdirSync(`${pathName}/images`);
+  const pathName = path.join('./src/data', propertyId)
+  const images = fs.readdirSync(`${pathName}/images`)
 
   const imagePreview = document.getElementById("image-preview")
 
@@ -205,14 +215,27 @@ function loadImages(propertyId) {
 
     newImage.className = "image-preview"
     newImage.src = `./data/${propertyId}/images/${currentImage}`
-    newImage.id = `preview-${i}`
+    newImage.id = images[i]
+    newImage.onclick = onClickImagePreview
   
     imagePreview.appendChild(newImage)
   }
 }
 
 function loadList(list = []) {
-  
+  const listElement = document.getElementById('list')
+
+  listElement.innerHTML = ''
+
+  for (let i = 0; i < list.length; i++) {
+    const currentItem = list[i];
+
+    const listItem = document.createElement('li')
+    listItem.className = 'list-group-item'
+    listItem.textContent = currentItem
+    listItem.onclick = onClickListItem
+    listElement.appendChild(listItem)
+  }
 }
 
 function loadData(propertyId) {
@@ -246,7 +269,7 @@ function loadData(propertyId) {
   value.value = propertyData.value
 }
 
-function saveData(id, exist = false) {
+function saveData(id) {
   const nameEl = document.getElementById('name')
   const city = document.getElementById('city')
   const description = document.getElementById('description')
@@ -276,12 +299,18 @@ function saveData(id, exist = false) {
     list: listItems
   }
 
-  if (!exist) {
-    createDirectory(id)
-    fs.writeFileSync(`./src/data/${id}/${id}.json`, JSON.stringify(data));
-  } else {
+  createDirectory(id)
+  fs.writeFileSync(`./src/data/${id}/${id}.json`, JSON.stringify(data));
 
-  }
+  saveFiles(id)
+
+  location.reload()
+}
+
+function onClickListItem(e) {
+  const list = document.getElementById('list')
+
+  list.removeChild(e.target)
 }
 
 function addItemList() {
@@ -293,27 +322,50 @@ function addItemList() {
   if (inputList.value !== '') {
     listItem.className = 'list-group-item'
     listItem.textContent = inputList.value
+    listItem.onclick = onClickListItem
     list.appendChild(listItem)
   }
+}
+
+function getCurrentPropertyId() {
+  const currentProperty = document.getElementById('current-property')
+
+  return currentProperty.value
+}
+
+function setCurrentPropertyId(id) {
+  const currentProperty = document.getElementById('current-property')
+
+  currentProperty.value = id
 }
 
 function onOpenModal() {
   const addResidenceButton = document.getElementById('add-residence')
 
   addResidenceButton.textContent = 'Adicionar'
+  addResidenceButton.onclick = onAddResidence
 }
 
 function onAddResidence() {
   const id = uuid.v4()
-  const name = document.getElementById('name')
-  const alreadyExists = residenceExists(name.value)
-
-  if (alreadyExists) {
-    return
-  }
 
   saveData(id)
-  saveFiles(id)
+}
+
+function onSearch(e) {
+  const searchInput = document.getElementById('search')
+  const filter = searchInput.value.toLowerCase();
+  const nodes = document.getElementsByClassName('residence-wrapper');
+
+  for (i = 0; i < nodes.length; i++) {
+    const titleElement = nodes[i].getElementsByTagName('h4')[0]
+
+    if (titleElement.innerText.toLowerCase().includes(filter)) {
+      nodes[i].style.display = "block";
+    } else {
+      nodes[i].style.display = "none";
+    }
+  }
 }
 
 addFile.onchange = onSelectFile
