@@ -70,3 +70,9 @@ html body {
 #location {
   margin-top: 20px;
 }
+
+.icon-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -45,14 +45,22 @@ html body {
 }
 
 .page-header {
-  height: 60px;
+  display: flex;
+  align-items: end;
+  gap: 20px;
+  height: 50px;
+  color: #FFF;
   background-color: #0d6efd;
+}
+
+.page-header img {
+  width: 50px;
+  height: 50px;
 }
 
 .residence-wrapper {
   display: flex;
   position: relative;
-  gap: 10px;
   cursor: pointer;
   transition: 0.3s;
   flex-direction: column;
@@ -67,7 +75,10 @@ html body {
 .residence-wrapper #residence-specs {
   display: flex;
   flex-direction: row;
-  gap: 10px;
+  justify-content: space-between;
+  background-color: #F2F2F2;
+  color: #7777;
+  padding: 10px;
 }
 
 .residence-wrapper div span{
@@ -140,4 +151,12 @@ html body {
 #image-preview img:hover {
   cursor: pointer;
   background-color: #ffc5c5;
+}
+
+.info-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
 }

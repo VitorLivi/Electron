@@ -5,14 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="index.css" />
 
     <title>Gerenciador de propriedades</title>
   </head>
   <body>
     <div>
-      <div class="page-header">
-      </div>
+      <div class="page-header d-flex">
+        <img src="./assets/home.svg">
+        <h3>Gerenciador de propriedades</h3>
+      </div>  
       <div>
       <div class="filter">
       <div>
@@ -30,6 +33,13 @@
         <button onclick="onOpenModal()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
           Novo
         </button>
+      </div>
+    </div>
+
+    <!-- Remove property modal -->
+    <div class="modal fade" id="remove-modal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        ...
       </div>
     </div>
 

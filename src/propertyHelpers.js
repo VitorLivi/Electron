@@ -61,10 +61,13 @@ function renderData() {
 
 function renderImages() {
   const pathName = path.join('./src/data', propertyId);
-  const images = fs.readdirSync(`${pathName}/images`);
+  let images = fs.readdirSync(`${pathName}/images`);
 
-  if (!images) {
-    return
+  let imagePath = `data/${propertyId}/images/`
+
+  if (images < 1) {
+    imagePath = 'assets/'
+    images = ['no-image.png']
   }
 
   const imageContainer = document.getElementById('image-container')
@@ -88,7 +91,7 @@ function renderImages() {
     newImageWrapper.className = 'carousel-item' + (isFirst ? ' active' : '')
 
     newImage.className = 'd-block w-100'
-    newImage.src = `data/${propertyId}/images/${currentImage}`
+    newImage.src = imagePath + currentImage
 
     newImageWrapper.appendChild(newImage)
 

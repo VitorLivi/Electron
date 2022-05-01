@@ -85,12 +85,25 @@ function renderWrapper(residenceId) {
   const editButton = document.createElement('div')
   const editButtonIcon = document.createElement('span')
 
+  removeButton[`data-bs-toggle`] = 'modal'
+  removeButton[`data-bs-target`] = '#remove-modal'
+
+  const editIcon = document.createElement('span')
+  const removeIcon = document.createElement('span')
+
+  editIcon.className = 'material-icons'
+  editIcon.textContent = 'edit'
+
+  removeIcon.className = 'material-icons'
+  removeIcon.textContent = 'clear'
+
   removeButton.className = 'remove-button'
-  removeButtonIcon.textContent = 'x'
+
+  removeButton.appendChild(removeIcon)
+  editButton.appendChild(editIcon)
 
   editButton.onclick = onEditProperty
   editButton.className = 'edit-button'
-  editButtonIcon.textContent = '✎'
 
   removeButton.appendChild(removeButtonIcon)
   editButton.appendChild(editButtonIcon)
@@ -122,9 +135,37 @@ function renderData(data, residenceWrapper) {
 
   residenceData.id = 'residence-specs'
 
+  const wrappper1 = document.createElement('div')
+  const wrappper2 = document.createElement('div')
+  const wrappper3 = document.createElement('div')
+
+  const icon1 = document.createElement('span')
+  const icon2 = document.createElement('span')
+  const icon3 = document.createElement('span')
+  
   const span1 = document.createElement('span')
   const span2 = document.createElement('span')
   const span3 = document.createElement('span')
+
+  wrappper1.className = 'info-wrapper'
+  wrappper2.className = 'info-wrapper'
+  wrappper3.className = 'info-wrapper'
+
+  icon1.className = 'material-icons'
+  icon1.textContent = 'open_in_full'
+
+  icon2.className = 'material-icons'
+  icon2.textContent = 'hotel'
+
+  icon3.className = 'material-icons'
+  icon3.textContent = 'bathtub'
+
+  wrappper1.appendChild(icon1)
+  wrappper1.appendChild(span1)
+  wrappper2.appendChild(icon2)
+  wrappper2.appendChild(span2)
+  wrappper3.appendChild(icon3)
+  wrappper3.appendChild(span3)
 
   const residenceNameEl = document.createElement('h4')
 
@@ -134,11 +175,13 @@ function renderData(data, residenceWrapper) {
 
   residenceNameEl.style.textAlign = 'center'
   residenceNameEl.style.maxWidth = '330px'
+  residenceNameEl.style.marginTop = '10px'
+  residenceNameEl.style.color = '#777'
   residenceNameEl.textContent = data.name
 
-  residenceData.appendChild(span1)
-  residenceData.appendChild(span2)
-  residenceData.appendChild(span3)
+  residenceData.appendChild(wrappper1)
+  residenceData.appendChild(wrappper2)
+  residenceData.appendChild(wrappper3)
 
   residenceWrapper.appendChild(residenceData)
   residenceWrapper.appendChild(residenceNameEl)
