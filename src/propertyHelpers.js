@@ -40,11 +40,11 @@ function renderData() {
   const propertyBathrooms = document.createElement('span')
 
   propertyId.textContent = 'ID: ' + propertyData.id
-  propertyType.textContent = 'Tipo: ' + propertyData.type
-  propertyStatus.textContent = 'Status: ' + propertyData.status
-  propertyMtrs.textContent = 'Mt²: ' + propertyData.mt
-  propertyRooms.textContent = 'Quartos: ' + propertyData.rooms
-  propertyBathrooms.textContent = 'Banheiros: ' + propertyData.bathrooms
+  propertyType.textContent = 'Tipo: ' + (propertyData.type || '-')
+  propertyStatus.textContent = 'Status: ' + (propertyData.status || '-')
+  propertyMtrs.textContent = 'Mt²: ' + (propertyData.mt || '-')
+  propertyRooms.textContent = 'Quartos: ' + (propertyData.rooms || '-')
+  propertyBathrooms.textContent = 'Banheiros: ' + (propertyData.bathrooms || '-')
 
   propertyPriceContent.textContent = currencyFormatter.format(propertyData.value, { code: 'BRL' });
 

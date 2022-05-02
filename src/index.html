@@ -14,15 +14,26 @@
     <div>
       <div class="page-header d-flex">
         <img src="./assets/home.svg">
-        <h3>Gerenciador de propriedades</h3>
-      </div>  
+        <h5>Gerenciador de propriedades</h5>
+      </div>
       <div>
       <div class="filter">
       <div>
-        <select class="form-select" aria-label="Tipo">
+        <select id="type" class="form-select" aria-label="Tipo">
           <option selected disabled>Tipo</option>
-          <option value="1">Apartamento</option>
-          <option value="2">Casa</option>
+          <option value="Casa geminada">Casa geminada</option>
+          <option value="Casa alvenaria">Casa alvenaria</option>
+          <option value="Sítio">Sítio</option>
+          <option value="Casa de madeira">Casa de madeira</option>
+          <option value="Casa de praia<">Casa de praia</option>
+          <option value="Casa de campo">Casa de campo</option>
+          <option value="Duplex">Duplex</option>
+          <option value="Terreno">Terreno</option>
+          <option value="Residencial">Residencial</option>
+          <option value="Condominio">Condominio</option>
+          <option value="Apartamento">Apartamento</option>
+          <option value="Comercial">Comercial</option>
+          <option value="Escritório">Escritório</option>
         </select>
       </div>
       <div class="d-flex flex-row gap-1">
@@ -37,9 +48,17 @@
     </div>
 
     <!-- Remove property modal -->
-    <div class="modal fade" id="remove-modal" tabindex="-1" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal fade" id="remove-modal" tabindex="-1" aria-labelledby="remove-modal" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered">
-        ...
+        <div class="modal-content">
+          <div class="modal-body remove-modal-content">
+            <h5>Tem certeza que deseja excluir?</h5>
+            <div>
+              <button type="button" class="btn btn-secondary btn-md" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-danger btn-md" onclick="onRemoveProperty()">Excluir</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -86,7 +105,7 @@
               <div class="row mb-3">
                 <label for="name" class="col-sm-2 col-form-label">Imagem</label>
                 <div class="col-sm-10">
-                  <input type="file" class="form-control" id="add-file">
+                  <input type="file" class="form-control" id="add-file" multiple accept="image/*">
                   <div id="image-preview"></div>
                 </div>
               </div>
@@ -95,19 +114,19 @@
                 <div class="col-sm-10">
                   <select id="type" class="form-select" aria-label="Tipo">
                     <option selected disabled>Tipo</option>
-                    <option value="1">Casa geminada</option>
-                    <option value="2">Casa alvenaria</option>
-                    <option value="3">Sítio</option>
-                    <option value="4">Casa de madeira</option>
-                    <option value="5">Casa de praia</option>
-                    <option value="6">Casa de campo</option>
-                    <option value="7">Duplex</option>
-                    <option value="8">Terreno</option>
-                    <option value="9">Residencial</option>
-                    <option value="10">Condominio</option>
-                    <option value="11">Apartamento</option>
-                    <option value="12">Comercial</option>
-                    <option value="13">Escritório</option>
+                    <option value="Casa geminada">Casa geminada</option>
+                    <option value="Casa alvenaria">Casa alvenaria</option>
+                    <option value="Sítio">Sítio</option>
+                    <option value="Casa de madeira">Casa de madeira</option>
+                    <option value="Casa de praia">Casa de praia</option>
+                    <option value="Casa de campo">Casa de campo</option>
+                    <option value="Duplex">Duplex</option>
+                    <option value="Terreno">Terreno</option>
+                    <option value="Residencial">Residencial</option>
+                    <option value="Condominio">Condominio</option>
+                    <option value="Apartamento">Apartamento</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="Escritório">Escritório</option>
                   </select>
                 </div>
               </div>
@@ -116,8 +135,8 @@
                 <div class="col-sm-10">
                   <select id="status" class="form-select" aria-label="Status">
                     <option selected disabled>Status</option>
-                    <option value="1">Á venda</option>
-                    <option value="2">Á alugar</option>
+                    <option value="Á venda">Á venda</option>
+                    <option value="Á alugar">Á alugar</option>
                   </select>
                 </div>
               </div>
@@ -139,7 +158,7 @@
               <div class="row mb-3">
                 <label for="name" class="col-sm-2 col-form-label">Valor</label>
                 <div class="col-sm-10">
-                  <input id="value" type="text" placeholder="R$" class="form-control">
+                  <input id="value" type="number" placeholder="R$" class="form-control">
                 </div>
               </div>
             </form>

@@ -46,11 +46,17 @@ html body {
 
 .page-header {
   display: flex;
-  align-items: end;
   gap: 20px;
   height: 50px;
   color: #FFF;
   background-color: #0d6efd;
+  user-select: none;
+}
+
+.page-header h5 {
+  align-self: center;  
+  margin: 0;
+  font-size: 18px;
 }
 
 .page-header img {
@@ -159,4 +165,18 @@ html body {
   gap: 10px;
   justify-content: center;
   align-items: center;
+}
+
+.remove-modal-content {
+  color: #777;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.remove-modal-content div {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
 }
