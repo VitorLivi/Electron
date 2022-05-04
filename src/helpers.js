@@ -8,7 +8,7 @@ const addResidenceButton = document.getElementById("add-residence")
 let files = []
 
 function getPropertyData(propertyId) {
-  return JSON.parse(fs.readFileSync(`${__dirname}/src/data/${propertyId}/${propertyId}.json`, 'utf8'));
+  return JSON.parse(fs.readFileSync(`${__dirname}/data/${propertyId}/${propertyId}.json`, 'utf8'));
 }
 
 function onSelectFile(e) {
@@ -42,10 +42,25 @@ function render(files = null) {
 }
 
 function filterByType() {
-  const type = document.getElementById('type').value
+  const type = document.getElementById('type-input').value
   const images = document.getElementById('images')
 
   images.innerHTML = ''
+
+  const data = fs.readdirSync(__dirname + '/data')
+
+  if (type === 'Todos') {
+    return render(data)
+  }
+
+  const filteredFiles = data.filter(file => {
+    const dataPath = `${__dirname}/data/${file}/${file}.json` 
+    const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+
+    return data.type === type
+  })
+
+  return render(filteredFiles)
 }
 
 function onClickResidence(e) {
@@ -280,7 +295,7 @@ function onClickImagePreview(e) {
 }
 
 function loadImages(propertyId) {
-  const pathName = path.join(__dirname + '/src/data', propertyId)
+  const pathName = path.join(__dirname + '/data', propertyId)
   const images = fs.readdirSync(`${pathName}/images`)
 
   const imagePreview = document.getElementById("image-preview")
@@ -407,11 +422,12 @@ function saveData(id) {
     bathrooms: bathrooms.value,
     mt: mt.value,
     value: value.value,
-    list: listItems
+    list: listItems,
+    update_at: new Date()
   }
 
   createDirectory(id)
-  fs.writeFileSync(`${__dirname}/src/data/${id}/${id}.json`, JSON.stringify(data));
+  fs.writeFileSync(`${__dirname}/data/${id}/${id}.json`, JSON.stringify(data));
 
   saveFiles(id)
 

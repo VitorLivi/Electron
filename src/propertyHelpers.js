@@ -6,11 +6,11 @@ const propertyId = getPropertyId()
 const propertyData = getPropertyData()
 
 function getPropertyData() {
-  return JSON.parse(fs.readFileSync(`./src/data/${propertyId}/${propertyId}.json`, 'utf8'));
+  return JSON.parse(fs.readFileSync(`${__dirname}/data/${propertyId}/${propertyId}.json`, 'utf8'));
 }
 
 function returnToHome() {
-  window.location.href = './index.html'
+  window.location.href = `${__dirname}/index.html`
 }
 
 function getPropertyId() {
@@ -60,7 +60,7 @@ function renderData() {
 }
 
 function renderImages() {
-  const pathName = path.join('./src/data', propertyId);
+  const pathName = path.join(__dirname + '/data', propertyId);
   let images = fs.readdirSync(`${pathName}/images`);
 
   let imagePath = `data/${propertyId}/images/`

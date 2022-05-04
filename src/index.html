@@ -19,8 +19,9 @@
       <div>
       <div class="filter">
       <div>
-        <select id="type" class="form-select" aria-label="Tipo">
+        <select id="type-input" class="form-select" aria-label="Tipo">
           <option selected disabled>Tipo</option>
+          <option value="Todos">Todos</option>
           <option value="Casa geminada">Casa geminada</option>
           <option value="Casa alvenaria">Casa alvenaria</option>
           <option value="Sítio">Sítio</option>
@@ -38,7 +39,7 @@
       </div>
       <div class="d-flex flex-row gap-1">
         <input id="search" class="form-control" onkeyup="onSearch()" type="search" placeholder="Procurar" aria-label="Procurar">
-        <button id="save" class="btn btn-outline-warning">
+        <button id="save" onclick="filterByType()" class="btn btn-outline-warning">
           Procurar
         </button>
         <button onclick="onOpenModal()" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
