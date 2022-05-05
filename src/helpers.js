@@ -28,16 +28,79 @@ function onSelectFile(e) {
   }
 }
 
-function render(files = null) {
+function renderPagination(propertyLength) {
+  const pagination = document.getElementById('pagination')
 
+  pagination.innerHTML = ''
+
+  if (propertyLength > 0) {
+
+    pagination.style.display = 'block'
+
+    const previous = document.createElement('li')
+    const previousLink = document.createElement('a')
+
+    previousLink.href = '#'
+    previousLink.className = 'page-link'
+    previousLink.textContent = 'Anterior'
+
+    previous.className = 'page-item'
+    previous.appendChild(previousLink)
+
+    pagination.appendChild(previous)
+
+    for (let i = 0; i < propertyLength; i++) {
+      const paginationItem = document.createElement('li')
+      const link = document.createElement('a')
+
+      link.href = '#'
+      link.className = 'page-link'
+      link.textContent = i
+
+      paginationItem.className = 'page-item'
+      paginationItem.appendChild(link)
+
+      pagination.appendChild(paginationItem)
+    }
+
+    const next = document.createElement('li')
+    const nextLink = document.createElement('a')
+
+    nextLink.href = '#'
+    nextLink.className = 'page-link'
+    nextLink.textContent = 'Próximo'
+
+    next.className = 'page-item'
+    next.appendChild(nextLink)
+
+    pagination.appendChild(next)
+  } else {
+    pagination.style.display = 'none'
+  }
+}
+
+function render(files = null) {
   if (files === null) {
     files = fs.readdirSync(__dirname + '/data');
   }
 
-  for(let i=0;i<files.length;i++){
-    const currentFile = files[i]
+  const propertiesData = []
 
-    renderWrapper(currentFile)
+  for (let i = 0; i < files?.length || 0; i++) {
+    const currentFile = files[i];
+    propertiesData.push(getPropertyData(currentFile))
+  }
+
+  renderPagination(propertiesData.length)
+
+  const sortedData = propertiesData.sort((a, b) => {
+    return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+  })
+
+  for(let i=0;i<sortedData.length;i++){
+    const currentPropertyData = sortedData[i]
+
+    renderWrapper(currentPropertyData)
   }
 }
 
@@ -96,7 +159,7 @@ function onRemoveProperty(e) {
 
   if (currentPropertyId && currentPropertyId !== null && currentPropertyId !== undefined && currentPropertyId !== '') {
     try {
-      fs.rmSync(`${__dirname}/src/data/${currentPropertyId}`, { recursive: true, force: true }, function(err) {
+      fs.rmSync(`${__dirname}/data/${currentPropertyId}`, { recursive: true, force: true }, function(err) {
         if (err) {
           throw new Error(err)
         }
@@ -109,15 +172,12 @@ function onRemoveProperty(e) {
   location.reload()
 }
 
-function renderWrapper(propertyId) {
-  const pathName = path.join( __dirname + '/data', propertyId);
+function renderWrapper(data) {
+  const pathName = path.join( __dirname + '/data', data.id);
   const images = fs.readdirSync(`${pathName}/images`);
 
   const imageDiv = document.getElementById('images')
   const residenceWrapper = document.createElement('div')
-
-  const dataPath = `${__dirname}/data/${propertyId}/${propertyId}.json` 
-  const data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
 
   residenceWrapper.className = 'residence-wrapper'
   residenceWrapper.id = data.id
@@ -141,7 +201,7 @@ function renderWrapper(propertyId) {
   removeIcon.textContent = 'clear'
 
   removeButton.onclick = function () {
-    setCurrentPropertyId(propertyId)
+    setCurrentPropertyId(data.id)
   }
 
   removeButton.className = 'remove-button'
@@ -159,7 +219,7 @@ function renderWrapper(propertyId) {
   residenceWrapper.appendChild(editButton)
 
   if (images.length > 0) {
-    renderImage(`data/${propertyId}/images/${images[0]}`, residenceWrapper)
+    renderImage(`data/${data.id}/images/${images[0]}`, residenceWrapper)
   } else {
     renderImage(__dirname +'/assets/no-image.png', residenceWrapper)
   }
@@ -234,13 +294,13 @@ function renderData(data, residenceWrapper) {
   residenceWrapper.appendChild(residenceNameEl)
 }
 
-function saveFiles(id) {
+async function saveFiles(id) {
   for (var i = 0; i < files.length; i++) {
     const file = files[i]
     const fileName = file.name
-    const filePath = __dirname + `/src/data/${id}/images/${fileName}`
+    const filePath = __dirname + `/data/${id}/images/${fileName}`
 
-    try {
+    await new Promise((resolve) => {
       const reader = new FileReader()
 
       reader.readAsArrayBuffer(file)
@@ -249,20 +309,21 @@ function saveFiles(id) {
         const data = event.target.result
         const buffer = Buffer.from(data)
 
-        fs.writeFileSync(filePath, buffer, function(err) {
-          if (err) {
-            throw new Error(err)
-          }
-        })
+        try {
+          fs.writeFileSync(filePath, buffer);
+          resolve()
+        } catch (error) {
+          throw new Error(error)
+        }
       }
-    } catch (error) {
-      console.log(error)
-    }
+    }).catch(err => {
+      console.log(err)
+    })
   }
 }
 
 function createDirectory(id) {
-  const dir = __dirname + `/src/data/${id}/images`;
+  const dir = __dirname + `/data/${id}/images`;
 
   fs.mkdirSync(dir, { recursive: true });
 }
@@ -284,7 +345,7 @@ function getListItems() {
 
 function onClickImagePreview(e) {
   const propertyId = getCurrentPropertyId()
-  const pathName = path.join(__dirname + '/src/data', propertyId)
+  const pathName = path.join(__dirname + '/data', propertyId)
 
   const imageName = e.target.id
 
@@ -423,15 +484,13 @@ function saveData(id) {
     mt: mt.value,
     value: value.value,
     list: listItems,
-    update_at: new Date()
+    updated_at: new Date()
   }
 
   createDirectory(id)
   fs.writeFileSync(`${__dirname}/data/${id}/${id}.json`, JSON.stringify(data));
 
-  saveFiles(id)
-
-  location.reload()
+  saveFiles(id).then(() => {location.reload()})
 }
 
 function onClickListItem(e) {

@@ -54,9 +54,10 @@ html body {
 }
 
 .page-header h5 {
-  align-self: center;  
-  margin: 0;
+  align-self: center;
+  font-weight: lighter;
   font-size: 18px;
+  margin: 0;
 }
 
 .page-header img {

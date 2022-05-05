@@ -1,6 +1,6 @@
 {
-  "name": "Property Administrator",
-  "productName": "Property Administrator",
+  "name": "Property_Administrator",
+  "productName": "Property_Administrator",
   "version": "1.0.0",
   "description": "My Electron application description",
   "main": "src/index.js",
@@ -19,12 +19,14 @@
   "license": "MIT",
   "config": {
     "forge": {
-      "packagerConfig": {},
+      "packagerConfig": {
+        "icon": "./src/assets/home.ico"
+      },
       "makers": [
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
-            "name": "Property Administrator"
+            "name": "Property_Administrator"
           }
         },
         {
