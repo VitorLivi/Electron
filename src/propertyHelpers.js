@@ -26,10 +26,10 @@ function renderTitle() {
 
 function renderData() {
   const propertyDescription = document.getElementById('property-description')
+  const propertyHeader = document.getElementById('property-header')
   const propertyPrice = document.getElementById('property-price')
   const propertyInfo = document.getElementById('property-info')
   const topInfo = document.getElementById('top-info')
-
 
   const propertyId = document.createElement('span')
   const propertyType = document.createElement('span')
@@ -38,6 +38,9 @@ function renderData() {
   const propertyMtrs = document.createElement('span')
   const propertyRooms = document.createElement('span')
   const propertyBathrooms = document.createElement('span')
+  const propertyPhone = document.createElement('span')
+  const lastUpdate = document.createElement('span')
+  const dataWrapper = document.createElement('div')
 
   propertyId.textContent = 'ID: ' + propertyData.id
   propertyType.textContent = 'Tipo: ' + (propertyData.type || '-')
@@ -48,6 +51,15 @@ function renderData() {
 
   propertyPriceContent.textContent = currencyFormatter.format(propertyData.value, { code: 'BRL' });
 
+  const lastUpdateDate = new Date(propertyData.updated_at)
+
+  propertyPhone.textContent = ('Telefone: ' + (propertyData.phone || '(00) 0000-0000'))
+  lastUpdate.textContent = lastUpdateDate.toLocaleDateString('pt-BR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
+
+  dataWrapper.className = 'data-wrapper'
+  dataWrapper.appendChild(propertyPhone)
+  dataWrapper.appendChild(lastUpdate)
+
   propertyPrice.appendChild(propertyPriceContent)
   topInfo.appendChild(propertyId)
   topInfo.appendChild(propertyType)
@@ -55,6 +67,7 @@ function renderData() {
   propertyInfo.appendChild(propertyMtrs)
   propertyInfo.appendChild(propertyRooms)
   propertyInfo.appendChild(propertyBathrooms)
+  propertyHeader.appendChild(dataWrapper)
 
   propertyDescription.innerText = propertyData.description
 }

@@ -181,3 +181,7 @@ html body {
   flex-direction: row;
   gap: 5px;
 }
+
+.page-item :hover {
+  cursor: pointer;
+}

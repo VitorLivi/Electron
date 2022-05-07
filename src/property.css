@@ -31,9 +31,16 @@ html body {
   word-wrap: break-word;       /* Internet Explorer 5.5+ */
 }
 
-#return-button {
+#property-header {
+  display: flex;
+  flex-direction: row;
   margin-top: 20px;
   margin-bottom: 20px;
+  align-items: baseline;
+  font-size: 20px;
+  padding-bottom: 20px;
+  border-bottom: solid 1px #ccc;
+  justify-content: space-between;
 }
 
 #top-info span {
@@ -75,4 +82,10 @@ html body {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.data-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }

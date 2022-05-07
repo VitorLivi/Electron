@@ -1,11 +1,14 @@
 const fs = require('fs')
 const path = require('path')
 const uuid = require('uuid')
+const webp = require('webp-converter');
 
 const addFile = document.getElementById("add-file")
 const addResidenceButton = document.getElementById("add-residence")
 
 let files = []
+let propertiesData = []
+let currentPage = 1
 
 function getPropertyData(propertyId) {
   return JSON.parse(fs.readFileSync(`${__dirname}/data/${propertyId}/${propertyId}.json`, 'utf8'));
@@ -33,7 +36,9 @@ function renderPagination(propertyLength) {
 
   pagination.innerHTML = ''
 
-  if (propertyLength > 0) {
+  const numberOfPages = Math.trunc(propertyLength/9) + (propertyLength%9 === 0 ? 0 : 1)
+
+  if (numberOfPages > 0) {
 
     pagination.style.display = 'block'
 
@@ -44,20 +49,30 @@ function renderPagination(propertyLength) {
     previousLink.className = 'page-link'
     previousLink.textContent = 'Anterior'
 
+    previousLink.onclick = function() {
+      if (currentPage > 1) {
+        currentPage--
+        render()
+      }
+    }
+
     previous.className = 'page-item'
     previous.appendChild(previousLink)
 
     pagination.appendChild(previous)
 
-    for (let i = 0; i < propertyLength; i++) {
+    for (let i = 0; i < numberOfPages; i++) {
       const paginationItem = document.createElement('li')
       const link = document.createElement('a')
 
-      link.href = '#'
       link.className = 'page-link'
-      link.textContent = i
+      link.textContent = i + 1
+      link.onclick = function() {
+        currentPage = parseInt(link.textContent)
+        render()
+      }
 
-      paginationItem.className = 'page-item'
+      paginationItem.className = 'page-item' + (i + 1 === currentPage ? ' active' : '')
       paginationItem.appendChild(link)
 
       pagination.appendChild(paginationItem)
@@ -70,6 +85,13 @@ function renderPagination(propertyLength) {
     nextLink.className = 'page-link'
     nextLink.textContent = 'Próximo'
 
+    nextLink.onclick = function() {
+      if (currentPage < numberOfPages) {
+        currentPage++
+        render()
+      }
+    }
+
     next.className = 'page-item'
     next.appendChild(nextLink)
 
@@ -80,27 +102,36 @@ function renderPagination(propertyLength) {
 }
 
 function render(files = null) {
-  if (files === null) {
-    files = fs.readdirSync(__dirname + '/data');
-  }
+  const images = document.getElementById('images')
 
-  const propertiesData = []
+  images.innerHTML = ''
 
-  for (let i = 0; i < files?.length || 0; i++) {
-    const currentFile = files[i];
-    propertiesData.push(getPropertyData(currentFile))
+  if (propertiesData.length === 0 || files !== null) {
+    propertiesData = []
+
+    if (files === null) {
+      files = fs.readdirSync(__dirname + '/data');
+    }
+
+    for (let i = 0; i < files?.length || 0; i++) {
+      const currentFile = files[i];
+      propertiesData.push(getPropertyData(currentFile))
+    }
   }
 
   renderPagination(propertiesData.length)
 
-  const sortedData = propertiesData.sort((a, b) => {
+  propertiesData = propertiesData.sort((a, b) => {
     return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
   })
 
-  for(let i=0;i<sortedData.length;i++){
-    const currentPropertyData = sortedData[i]
-
-    renderWrapper(currentPropertyData)
+  for(let i=currentPage * 9 - 9;i < currentPage * 9;i++){
+    try {
+      const currentPropertyData = propertiesData[i]
+      renderWrapper(currentPropertyData)
+    } catch (error) {
+      // Do nothing
+    }
   }
 }
 
@@ -156,6 +187,7 @@ function onEditProperty(e) {
 
 function onRemoveProperty(e) {
   const currentPropertyId = getCurrentPropertyId()
+  const removeCancelBtn = document.getElementById('remove-cancel-btn')
 
   if (currentPropertyId && currentPropertyId !== null && currentPropertyId !== undefined && currentPropertyId !== '') {
     try {
@@ -169,7 +201,10 @@ function onRemoveProperty(e) {
     }
   }
 
-  location.reload()
+  removeCancelBtn.click()
+
+  propertiesData = []
+  render()
 }
 
 function renderWrapper(data) {
@@ -311,7 +346,16 @@ async function saveFiles(id) {
 
         try {
           fs.writeFileSync(filePath, buffer);
-          resolve()
+          if (fileName.split('.')[1] === 'webp') {
+            const result = webp.dwebp(filePath,filePath.replace('webp', 'jpg'),"-o",logging="-v");
+            result.then((response) => {
+              resolve()
+            }).catch((err) => {
+              throw new Error(err)
+            })
+          } else {
+            resolve()
+          }
         } catch (error) {
           throw new Error(error)
         }
@@ -459,6 +503,7 @@ function clearModalFields() {
 function saveData(id) {
   const nameEl = document.getElementById('name')
   const city = document.getElementById('city')
+  const phone = document.getElementById('phone')
   const description = document.getElementById('description')
   const type = document.getElementById('type')
   const status = document.getElementById('status')
@@ -474,6 +519,7 @@ function saveData(id) {
     id: id,
     name: nameEl.value,
     city: city.value,
+    phone: phone.value,
     description: description.value,
     type: type.value,
     status: status.value,
@@ -490,7 +536,10 @@ function saveData(id) {
   createDirectory(id)
   fs.writeFileSync(`${__dirname}/data/${id}/${id}.json`, JSON.stringify(data));
 
-  saveFiles(id).then(() => {location.reload()})
+  saveFiles(id).then(() => {
+    propertiesData = []
+    render()
+  })
 }
 
 function onClickListItem(e) {
@@ -553,6 +602,30 @@ function onSearch(e) {
       nodes[i].style.display = "none";
     }
   }
+}
+
+function mask(o, f) {
+  setTimeout(function() {
+    var v = mphone(o.value);
+    if (v != o.value) {
+      o.value = v;
+    }
+  }, 1);
+}
+
+function mphone(v) {
+  var r = v.replace(/\D/g, "");
+  r = r.replace(/^0/, "");
+  if (r.length > 10) {
+    r = r.replace(/^(\d\d)(\d{5})(\d{4}).*/, "($1) $2-$3");
+  } else if (r.length > 5) {
+    r = r.replace(/^(\d\d)(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+  } else if (r.length > 2) {
+    r = r.replace(/^(\d\d)(\d{0,5})/, "($1) $2");
+  } else {
+    r = r.replace(/^(\d*)/, "($1");
+  }
+  return r;
 }
 
 addFile.onchange = onSelectFile
