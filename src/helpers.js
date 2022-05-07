@@ -349,6 +349,7 @@ async function saveFiles(id) {
           if (fileName.split('.')[1] === 'webp') {
             const result = webp.dwebp(filePath,filePath.replace('webp', 'jpg'),"-o",logging="-v");
             result.then((response) => {
+              fs.unlinkSync(filePath)
               resolve()
             }).catch((err) => {
               throw new Error(err)
